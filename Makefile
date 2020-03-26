@@ -1,9 +1,9 @@
 client-run:
-	mvn exec:java -pl client -Dexec.mainClass="GoClient" -Dexec.args="localhost 6868"
+	mvn exec:java -pl client -Dexec.mainClass="hse.cs.networks.GoClient" -Dexec.args="localhost 6868"
 
 server-run:
 	cd server
-	mvn exec:java -pl server -Dexec.mainClass="GoServer" -Dexec.args="6868"
+	mvn exec:java -pl server -Dexec.mainClass="hse.cs.networks.GoServer" -Dexec.args="6868"
 
 db:
 	@echo shutting down docker with database if exists

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>goGame</artifactId>
-        <groupId>networksHW3</groupId>
+        <groupId>hse.cs.networks</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -26,12 +26,13 @@
     </build>
 
     <artifactId>client</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>networksHW3</groupId>
+            <groupId>hse.cs.networks</groupId>
             <artifactId>go</artifactId>
-            <version>${project.version}</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
