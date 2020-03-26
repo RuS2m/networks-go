@@ -21,7 +21,8 @@ public class GoClient {
             String text;
 
             do {
-                text = console.readLine("Enter command: ");
+                text = console.readLine();
+                text = text.replaceAll(" ", MessageBuilder.MESSAGE_DELIMITER);
 
                 writer.println(text);
 
@@ -30,11 +31,20 @@ public class GoClient {
 
                 String command = reader.readLine();
 
-                System.out.println(command);
                 if (command != null) {
-                    if (command.startsWith("BOARD") && command.split("#").length > 1) {
-                        var gameHistory = command.split("#")[1];
-                        var board = GameHistory.fromMovesRecordsQueue(Arrays.asList(gameHistory.split("\\$"))).toBoard();
+                    if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.WRONG_COMMAND)) {
+                        System.out.println("Invalid command: " + command.split(MessageBuilder.MESSAGE_DELIMITER)[1]);
+                    } else if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.NO_USER)) {
+                        System.out.println("There is no user with username " + command.split(MessageBuilder.MESSAGE_DELIMITER)[1] + ".");
+                    } else if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.FAILED_AUTH)) {
+                        System.out.println("Wrong password. Try again.");
+                    } else if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.ALREADY_USER)) {
+                        System.out.println("There is already user with username " + command.split(MessageBuilder.MESSAGE_DELIMITER)[1] + ". Try another one.");
+                    } else if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.SUCCESS_AUTH)) {
+                        System.out.println("Successful authorization.");
+                    } else if (MessageBuilder.isRightCommand(command, MessageBuilder.ServerCommands.BOARD)) {
+                        var gameHistory = command.split(MessageBuilder.MESSAGE_DELIMITER)[1];
+                        var board = GameHistory.fromMovesRecordsQueue(Arrays.asList(gameHistory.split(MessageBuilder.MESSAGE_ARRAY_DELIMITER))).toBoard();
                         System.out.println(board);
                     }
                 }

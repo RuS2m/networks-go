@@ -1,6 +1,6 @@
 package utils;
 
-public class UnsupportedCommandException  extends RuntimeException {
+public class UnsupportedCommandException  extends ServerInternalException {
 
     public UnsupportedCommandException() {
         // nop

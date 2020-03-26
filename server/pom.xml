@@ -36,8 +36,7 @@
         <dependency>
             <groupId>networksHW3</groupId>
             <artifactId>go</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

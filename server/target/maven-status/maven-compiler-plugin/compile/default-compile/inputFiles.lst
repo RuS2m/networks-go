@@ -1,3 +1,9 @@
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/command/handlers/auth/AuthenticationQueryService.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/command/handlers/GameRunner.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/command/handlers/CommandHandler.java
 /Users/rus2m/Documents/HSE/networks-go/server/src/main/java/GoServerThread.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/utils/UnsupportedCommandException.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/command/handlers/auth/Authenticator.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/command/MessageBuilder.java
+/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/utils/ServerInternalException.java
 /Users/rus2m/Documents/HSE/networks-go/server/src/main/java/GoServer.java
-/Users/rus2m/Documents/HSE/networks-go/server/src/main/java/GameSession.java

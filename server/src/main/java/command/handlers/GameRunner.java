@@ -1,3 +1,5 @@
+package command.handlers;
+
 import game.*;
 import utils.UnsupportedCommandException;
 
@@ -6,26 +8,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 
-public class GameSession {
-
-    private PrintWriter writer;
-
-    private BufferedReader reader;
-
-    private Connection connection;
+public class GameRunner extends CommandHandler {
 
     private GameHistory gameHistory;
 
-    public GameSession(PrintWriter writer, BufferedReader reader, Connection connection) {
-        this.writer = writer;
-        this.reader = reader;
-        this.connection = connection;
+    public GameRunner(PrintWriter writer, BufferedReader reader, Connection connection) {
+        super(writer, reader, connection);
         this.gameHistory = new GameHistory();
     }
 
-    public void start() throws IOException {
+    @Override
+    public void handle() throws IOException {
         do {
-            var command = reader.readLine();
+            var command = this.getReader().readLine();
             if (command != null) {
                 try {
                     if (command.startsWith("PASS")) {
@@ -39,7 +34,7 @@ public class GameSession {
                 } catch (UnsupportedCommandException e) {
                     System.out.println(e.getMessage());
                 }
-                writer.println("BOARD#" + String.join("$", this.gameHistory.movesRecordsQueue()));
+                this.getWriter().println("BOARD#" + String.join("$", this.gameHistory.movesRecordsQueue()));
             }
         } while (true);
     }

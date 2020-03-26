@@ -1,3 +1,6 @@
+import command.handlers.GameRunner;
+import command.handlers.auth.Authenticator;
+
 import java.io.*;
 import java.net.Socket;
 import java.sql.Connection;
@@ -21,9 +24,13 @@ public class GoServerThread extends Thread {
             var output = this.socket.getOutputStream();
             var writer = new PrintWriter(output, true);
 
+            // Authentication step
+            var authenticator = new command.handlers.auth.Authenticator(writer, reader, connection);
+            authenticator.handle();
 
-            GameSession gameSession = new GameSession(writer, reader, connection);
-            gameSession.start();
+            // Game step
+            var gameSession = new GameRunner(writer, reader, connection);
+            gameSession.handle();
 
             socket.close();
         } catch (IOException ex) {
