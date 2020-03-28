@@ -11,10 +11,14 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import static hse.cs.networks.common.MessageBuilder.*;
+import static hse.cs.networks.common.MessageBuilder.ClientCommands.*;
+import static hse.cs.networks.common.MessageBuilder.ServerCommands.*;
 
 public class Authenticator extends CommandHandler {
 
     private AuthenticationQueryService authenticationQueryService;
+
+    private boolean isAuthComplete = false;
 
     public Authenticator(PrintWriter writer, BufferedReader reader, Connection connection) {
         super(writer, reader, connection);
@@ -28,14 +32,14 @@ public class Authenticator extends CommandHandler {
             if (command != null) {
                 var message = "";
                 try {
-                    if (isRightCommand(command, MessageBuilder.ClientCommands.LOGIN)) {
+                    if (isRightCommand(command, LOGIN)) {
                         message = handleLoginCommand(command);
-                    } else if (isRightCommand(command, MessageBuilder.ClientCommands.SIGN_UP)) {
+                    } else if (isRightCommand(command, SIGN_UP)) {
                         message = handleSignUpCommand(command);
-                    } else if ((isRightCommand(command, MessageBuilder.ClientCommands.QUIT))) {
+                    } else if ((isRightCommand(command, QUIT))) {
                         break;
                     } else {
-                        message = message(MessageBuilder.ServerCommands.WRONG_COMMAND, command);
+                        message = message(WRONG_COMMAND, command.replaceAll(MESSAGE_DELIMITER, " "));
                     }
                 } catch (ServerInternalException e) {
                     System.out.println(e.getMessage());
@@ -44,7 +48,7 @@ public class Authenticator extends CommandHandler {
                     this.getWriter().println(message);
                 }
             }
-        } while (true);
+        } while (!this.isAuthComplete);
     }
 
     private String handleLoginCommand(String command) throws ServerInternalException {
@@ -60,11 +64,12 @@ public class Authenticator extends CommandHandler {
             throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
         }
         if (!isUsernameExist) {
-            return message(ServerCommands.NO_USER, username);
+            return message(NO_USER, username);
         } else if (!areCredentialsCorrect) {
-            return message(ServerCommands.FAILED_AUTH);
+            return message(FAILED_AUTH);
         } else {
-            return message(ServerCommands.SUCCESS_AUTH);
+            this.isAuthComplete = true;
+            return message(SUCCESS_AUTH);
         }
     }
 
@@ -79,7 +84,7 @@ public class Authenticator extends CommandHandler {
             throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
         }
         if (isUsernameExist) {
-            return message(ServerCommands.ALREADY_USER, username);
+            return message(ALREADY_USER, username);
         } else {
             try {
                 this.authenticationQueryService.signUp(username, password);
@@ -87,7 +92,8 @@ public class Authenticator extends CommandHandler {
                 System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
                 throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
             }
-            return message(ServerCommands.SUCCESS_AUTH);
+            this.isAuthComplete = true;
+            return message(SUCCESS_AUTH);
         }
     }
 }

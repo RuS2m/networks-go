@@ -50,8 +50,7 @@ public class MessageBuilder {
         NO_USER("NO_USER", 1),
         ALREADY_USER("ALREADY_USER", 1),
         SUCCESS_AUTH("SUCCESS_AUTH", 0),
-        BOARD("BOARD", 1)
-        ;
+        BOARD("BOARD", 1);
 
         private String commandText;
 

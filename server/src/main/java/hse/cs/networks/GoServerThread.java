@@ -1,6 +1,7 @@
 package hse.cs.networks;
 
 import hse.cs.networks.command.handlers.GameRunner;
+import hse.cs.networks.command.handlers.auth.Authenticator;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,7 +27,7 @@ public class GoServerThread extends Thread {
             var writer = new PrintWriter(output, true);
 
             // Authentication step
-            var authenticator = new hse.cs.networks.command.handlers.auth.Authenticator(writer, reader, connection);
+            var authenticator = new Authenticator(writer, reader, connection);
             authenticator.handle();
 
             // Game step
