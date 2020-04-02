@@ -14,9 +14,9 @@ public class LobbyQueryService {
         this.connection = connection;
     }
 
-    public void createLobby(String lobbyName, String username) throws SQLException {
+    public long createLobby(String lobbyName, String username) throws SQLException {
         var lobbyId = new Random().nextLong();
-        while (!isLobbyExist(lobbyId)) {
+        while (isLobbyExist(lobbyId)) {
             lobbyId = new Random().nextLong();
         }
         var pst = connection.prepareStatement("INSERT INTO lobbies(lobby_id, lobby_name, state) VALUES(?, ?, ?);");
@@ -25,6 +25,7 @@ public class LobbyQueryService {
         pst.setString(3, LobbyState.NOT_FULL.getStateName());
         pst.executeUpdate();
         joinLobby(lobbyId, username);
+        return lobbyId;
     }
 
     public boolean isLobbyExist(Long lobbyId) throws SQLException {
@@ -73,7 +74,7 @@ public class LobbyQueryService {
         pst.setLong(1, lobbyId);
         var rs = pst.executeQuery();
         var usersInLobby = new HashMap<String, Boolean>();
-        while(rs.next()){
+        while(rs.next()) {
             var username = rs.getString(1);
             var state = rs.getString(2);
             usersInLobby.put(username, state.equals(ParticipationState.READY.getStateName()));

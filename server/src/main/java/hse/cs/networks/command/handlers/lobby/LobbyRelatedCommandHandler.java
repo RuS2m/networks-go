@@ -90,18 +90,18 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
             isLobbyFull = this.lobbyQueryService.isLobbyFull(parsedLobbyId);
         } catch (SQLException e) {
             System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-            throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
+            throw new ServerInternalException("Something went wrong during command execution");
         }
         if (!isLobbyExist) {
             return message(FAILED_JOIN, lobbyId, "There is no lobby with such id");
-        } else if (!isLobbyFull) {
+        } else if (isLobbyFull) {
             return message(FAILED_JOIN, lobbyId, "Lobby is full. Try to get into another one");
         } else {
             try {
                 this.lobbyQueryService.joinLobby(parsedLobbyId, this.username);
             } catch (SQLException e) {
                 System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-                throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
+                throw new ServerInternalException("Something went wrong during command execution");
             }
             this.lobbyId = parsedLobbyId;
             if (this.lobbyObserver != null) {
@@ -114,19 +114,52 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
     }
 
     private String handleCreateCommand(String command) throws ServerInternalException {
-        return command;
+        var lobbyName = command.split(MESSAGE_DELIMITER)[1];
+        if (this.lobbyId != null) {
+            return message(FAILED_JOIN, "You already in a lobby. Quit first, for joining another one");
+        }
+        long lobbyId = 0L;
+        try {
+            lobbyId = this.lobbyQueryService.createLobby(lobbyName, username);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+            throw new ServerInternalException("Something went wrong during command execution");
+        }
+        this.lobbyId = lobbyId;
+        if (this.lobbyObserver != null) {
+            this.lobbyObserver.interrupt();
+        }
+        this.lobbyObserver = new LobbyObserver(this.lobbyId, this.getWriter(), this.lobbyQueryService);
+        this.lobbyObserver.start();
+        return message(SUCCESS_JOIN, Long.toString(lobbyId));
     }
 
     private String handleQuitCommand(String command) throws ServerInternalException {
-        return command;
+        try {
+            this.lobbyQueryService.quitLobby(username);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+            throw new ServerInternalException("Something went wrong during command execution");
+        }
+        return message(DEBUG_INFO, "Successful quit");
     }
 
     private String handleReadyCommand(String command) throws ServerInternalException {
-        return command;
+        try {
+            this.lobbyQueryService.setReady(username);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+            throw new ServerInternalException("Something went wrong during command execution");
+        }
+        return message(DEBUG_INFO, "Successful ready");
     }
 
-    private String handleStartCommand(String command) throws ServerInternalException {
-        return command;
+    private String handleStartCommand(String command) {
+        if (this.lobbyObserver != null && this.lobbyObserver.isAllReady()) {
+            return message(GAME_STARTED);
+        } else {
+            return message(FAILED_START);
+        }
     }
 
     public boolean isSessionActive() {

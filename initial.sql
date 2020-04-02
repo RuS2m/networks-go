@@ -22,7 +22,7 @@ CREATE TABLE lobbies (
 CREATE TABLE participations (
     username VARCHAR(16) REFERENCES users(username),
     lobby_id BIGINT REFERENCES lobbies(lobby_id),
-    session_id BIGINT REFERENCES games(session_id),
+    session_id BIGINT,
     state TEXT NOT NULL,
-    PRIMARY KEY(username, lobby_id, session_id)
+    PRIMARY KEY(username, lobby_id)
 );

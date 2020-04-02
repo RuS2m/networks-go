@@ -50,11 +50,16 @@ public class MessageBuilder {
         NO_USER("NO_USER", 1),
         ALREADY_USER("ALREADY_USER", 1),
         SUCCESS_AUTH("SUCCESS_AUTH", 0),
-        FAILED_JOIN("FAILED_JOIN", 2),
-        SUCCESS_JOIN("SUCCESS_JOIN", List.of(0, 1)),
-        USER_JOINED("USER_JOINED", 2),
-        USER_QUIT("USER_JOINED", 2),
+        FAILED_JOIN("FAILED_JOIN", List.of(1, 2)),
+        SUCCESS_JOIN("SUCCESS_JOIN", 1),
+        USER_JOINED("USER_JOINED", 1),
+        USER_QUIT("USER_QUIT", 1),
+        USER_READY("USER_READY", 1),
+        USER_NOT_READY("USER_NOT_READY", 1),
         ALL_READY("START", 0),
+        DEBUG_INFO("DEBUG_INFO", 1),
+        FAILED_START("FAILED_START", 0),
+        GAME_STARTED("GAME_STARTED", 0),
         BOARD("BOARD", 1);
 
         private String commandText;
