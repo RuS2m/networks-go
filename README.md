@@ -4,7 +4,7 @@ Game was written using Java 11, Docker and Makefile, please make sure, that you 
 
 ### Usage example:
 
-Firstly, run command `make db`
+Firstly, run command `make db` and then `mvn clean install`
 
 For server start, run command `make server-run`
 

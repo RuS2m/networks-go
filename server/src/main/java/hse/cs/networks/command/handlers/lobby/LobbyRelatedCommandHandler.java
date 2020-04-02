@@ -24,6 +24,8 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
 
     private Long sessionId;
 
+    private int gameOrder;
+
     private LobbyQueryService lobbyQueryService;
 
     private LobbyObserver lobbyObserver;
@@ -141,6 +143,11 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
             System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             throw new ServerInternalException("Something went wrong during command execution");
         }
+        if (this.lobbyObserver != null) {
+            this.lobbyObserver.interrupt();
+        }
+        this.sessionId = null;
+        this.lobbyId = null;
         return message(DEBUG_INFO, "Successful quit");
     }
 
@@ -154,8 +161,16 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
         return message(DEBUG_INFO, "Successful ready");
     }
 
-    private String handleStartCommand(String command) {
+    private String handleStartCommand(String command) throws ServerInternalException {
         if (this.lobbyObserver != null && this.lobbyObserver.isAllReady()) {
+            try {
+                this.sessionId = this.lobbyQueryService.startSession(this.lobbyId);
+                this.gameOrder = this.lobbyQueryService.gameOrder(this.lobbyId, this.username);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+                throw new ServerInternalException("Something went wrong during command execution");
+            }
+            System.out.println(sessionId);
             return message(GAME_STARTED);
         } else {
             return message(FAILED_START);
@@ -164,5 +179,17 @@ public class LobbyRelatedCommandHandler extends CommandHandler {
 
     public boolean isSessionActive() {
         return isSessionActive;
+    }
+
+    public Long getLobbyId() {
+        return lobbyId;
+    }
+
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public int getGameOrder() {
+        return gameOrder;
     }
 }

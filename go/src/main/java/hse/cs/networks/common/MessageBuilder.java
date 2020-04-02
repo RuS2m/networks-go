@@ -60,6 +60,7 @@ public class MessageBuilder {
         DEBUG_INFO("DEBUG_INFO", 1),
         FAILED_START("FAILED_START", 0),
         GAME_STARTED("GAME_STARTED", 0),
+        FAILED_MOVE("FAILED_MOVE", 1),
         BOARD("BOARD", 1);
 
         private String commandText;
@@ -82,7 +83,9 @@ public class MessageBuilder {
     }
 
     public enum ClientCommands {
-        MOVE("MOVE", List.of(1, 2)),
+        PASS("PASS", 0),
+        MOVE("MOVE", 2),
+        HISTORY("HISTORY", 0),
         LOGIN("LOGIN", 2),
         SIGN_UP("SIGN_UP", 2),
         JOIN_LOBBY("JOIN_LOBBY", 1),

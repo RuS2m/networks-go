@@ -7,7 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE games (
     session_id BIGINT PRIMARY KEY,
-    history TEXT,
+    game_history TEXT,
     step BIGINT NOT NULL,
     state TEXT NOT NULL
 );

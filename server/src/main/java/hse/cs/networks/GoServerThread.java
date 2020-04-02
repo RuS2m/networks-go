@@ -1,6 +1,6 @@
 package hse.cs.networks;
 
-import hse.cs.networks.command.handlers.GameRunner;
+import hse.cs.networks.command.handlers.game.GameRunner;
 import hse.cs.networks.command.handlers.auth.Authenticator;
 import hse.cs.networks.command.handlers.lobby.LobbyRelatedCommandHandler;
 
@@ -39,7 +39,15 @@ public class GoServerThread extends Thread {
 
                 if (lobbyRelatedCommandHandler.isSessionActive()) {
                     // Game step
-                    var gameSession = new GameRunner(writer, reader, connection);
+                    var gameSession = new GameRunner(
+                            writer,
+                            reader,
+                            connection,
+                            username,
+                            lobbyRelatedCommandHandler.getLobbyId(),
+                            lobbyRelatedCommandHandler.getSessionId(),
+                            lobbyRelatedCommandHandler.getGameOrder()
+                    );
                     gameSession.handle();
                 }
             }
