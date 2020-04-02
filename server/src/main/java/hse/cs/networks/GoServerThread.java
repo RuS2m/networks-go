@@ -2,6 +2,7 @@ package hse.cs.networks;
 
 import hse.cs.networks.command.handlers.GameRunner;
 import hse.cs.networks.command.handlers.auth.Authenticator;
+import hse.cs.networks.command.handlers.lobby.LobbyRelatedCommandHandler;
 
 import java.io.*;
 import java.net.Socket;
@@ -30,9 +31,18 @@ public class GoServerThread extends Thread {
             var authenticator = new Authenticator(writer, reader, connection);
             authenticator.handle();
 
-            // Game step
-            var gameSession = new GameRunner(writer, reader, connection);
-            gameSession.handle();
+            if (authenticator.isAuthComplete()) {
+                // Lobby choosing step
+                var username = authenticator.getUsername();
+                var lobbyRelatedCommandHandler = new LobbyRelatedCommandHandler(writer, reader, connection, username);
+                lobbyRelatedCommandHandler.handle();
+
+                if (lobbyRelatedCommandHandler.isSessionActive()) {
+                    // Game step
+                    var gameSession = new GameRunner(writer, reader, connection);
+                    gameSession.handle();
+                }
+            }
 
             socket.close();
         } catch (IOException ex) {

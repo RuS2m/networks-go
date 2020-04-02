@@ -50,6 +50,11 @@ public class MessageBuilder {
         NO_USER("NO_USER", 1),
         ALREADY_USER("ALREADY_USER", 1),
         SUCCESS_AUTH("SUCCESS_AUTH", 0),
+        FAILED_JOIN("FAILED_JOIN", 2),
+        SUCCESS_JOIN("SUCCESS_JOIN", List.of(0, 1)),
+        USER_JOINED("USER_JOINED", 2),
+        USER_QUIT("USER_JOINED", 2),
+        ALL_READY("START", 0),
         BOARD("BOARD", 1);
 
         private String commandText;
@@ -75,6 +80,11 @@ public class MessageBuilder {
         MOVE("MOVE", List.of(1, 2)),
         LOGIN("LOGIN", 2),
         SIGN_UP("SIGN_UP", 2),
+        JOIN_LOBBY("JOIN_LOBBY", 1),
+        CREATE_LOBBY("CREATE_LOBBY", 1),
+        QUIT_LOBBY("QUIT_LOBBY", 0),
+        READY("READY", 0),
+        START("START", 0),
         QUIT("QUIT", 0);
 
         private String commandText;

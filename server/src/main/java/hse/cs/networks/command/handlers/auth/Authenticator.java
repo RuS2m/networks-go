@@ -20,6 +20,8 @@ public class Authenticator extends CommandHandler {
 
     private boolean isAuthComplete = false;
 
+    private String username;
+
     public Authenticator(PrintWriter writer, BufferedReader reader, Connection connection) {
         super(writer, reader, connection);
         this.authenticationQueryService = new AuthenticationQueryService(connection);
@@ -68,6 +70,7 @@ public class Authenticator extends CommandHandler {
         } else if (!areCredentialsCorrect) {
             return message(FAILED_AUTH);
         } else {
+            this.username = username;
             this.isAuthComplete = true;
             return message(SUCCESS_AUTH);
         }
@@ -92,8 +95,17 @@ public class Authenticator extends CommandHandler {
                 System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
                 throw new ServerInternalException("Something went wrong during hse.cs.networks.command execution");
             }
+            this.username = username;
             this.isAuthComplete = true;
             return message(SUCCESS_AUTH);
         }
+    }
+
+    public boolean isAuthComplete() {
+        return isAuthComplete;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
